@@ -116,6 +116,8 @@
         <source id="videoSource" src="video/美酒传奇01酒神苏醒.mp4" type="video/mp4">
         您的浏览器不支持video标签。
     </video>
+    <!-- 添加iframe标签 -->
+    <iframe src="http://www.staggeringbeauty.com/" style="border: 1px inset #ddd; width: 100%; max-width: 640px;" width="640" height="480"></iframe>
     <ul id="videoList" style="display:none;">
         <li>video/美酒传奇01酒神苏醒.mp4</li>
         <li>video/美酒传奇02葡萄酒与王室.mp4</li>
@@ -179,6 +181,13 @@
                 videoPlayer.load();
                 videoPlayer.play();
                 updateVideoSelect();
+            });
+
+            // 创建彩虹光标效果
+            new cursoreffects.rainbowCursor({
+                length: 3,
+                colors: ["red", "blue"],
+                size: 4,
             });
         });
     </script>
