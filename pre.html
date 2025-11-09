@@ -3,121 +3,846 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美酒传奇20集全</title>
+    <title>美酒传奇</title>
     <!-- 添加自定义图标 -->
     <link rel="icon" href="/icon/ico.png">
+    <!-- 引入Google Fonts的Roboto字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- 引入Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
+        /* 定义Material You 3颜色变量 - 默认紫色主题 */
+        :root {
+            /* 主色调 */
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF;
+            --md-sys-color-on-primary-container: #21005D;
+            
+            /* 辅助色 */
+            --md-sys-color-secondary: #625B71;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #E8DEF8;
+            --md-sys-color-on-secondary-container: #1D192B;
+            
+            /* 表面色 */
+            --md-sys-color-surface: #FFFBFE;
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-surface-variant: #E7E0EC;
+            --md-sys-color-on-surface-variant: #49454F;
+            
+            /* 背景色 */
+            --md-sys-color-background: #FFFBFE;
+            --md-sys-color-on-background: #1C1B1F;
+            
+            /* 其他 */
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-shadow: #000000;
+            
+            /* 深色模式变量 */
+            --md-sys-color-primary-dark: #D0BCFF;
+            --md-sys-color-on-primary-dark: #381E72;
+            --md-sys-color-primary-container-dark: #4F378B;
+            --md-sys-color-on-primary-container-dark: #EADDFF;
+            
+            --md-sys-color-secondary-dark: #CCC2DC;
+            --md-sys-color-on-secondary-dark: #332D41;
+            --md-sys-color-secondary-container-dark: #4A4458;
+            --md-sys-color-on-secondary-container-dark: #E8DEF8;
+            
+            --md-sys-color-surface-dark: #1C1B1F;
+            --md-sys-color-on-surface-dark: #E6E1E5;
+            --md-sys-color-surface-variant-dark: #49454F;
+            --md-sys-color-on-surface-variant-dark: #CAC4D0;
+            --md-sys-color-background-dark: #1C1B1F;
+            --md-sys-color-on-background-dark: #E6E1E5;
+            --md-sys-color-outline-dark: #938F99;
+            --md-sys-color-shadow-dark: #000000;
+            
+            /* 动画变量 */
+            --ripple-x: 0px;
+            --ripple-y: 0px;
+            --ripple-active: 0;
+            
+            /* 模糊强度 */
+            --blur-intensity: 10px;
+        }
+
+        /* 应用快乐站酷体，如果用户没有安装则使用备用字体 */
+        @font-face {
+            font-family: 'HappyZcool';
+            src: local('ZCOOL KuaiLe'), local('HappyZcool');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'HappyZcool', 'Roboto', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #212121;
-            color: #fff;
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
             padding: 20px;
             min-height: 100vh;
             margin: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
         }
+
+        /* 圆形展开动画 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: var(--ripple-y);
+            left: var(--ripple-x);
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: var(--md-sys-color-primary-container);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease, opacity 0.6s ease;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        body.ripple-active::before {
+            width: 300vmax;
+            height: 300vmax;
+            opacity: var(--ripple-active);
+        }
+
+        /* 高斯模糊背景 */
+        .blur-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(var(--blur-intensity));
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .blur-background.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Material You 3卡片样式 */
+        .card {
+            background-color: var(--md-sys-color-surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 640px;
+            transition: all 0.3s ease;
+        }
+
+        /* 视频播放器样式 */
         video {
             width: 100%;
             max-width: 640px;
             margin-bottom: 20px;
             background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
         }
+
+        /* Material You 3选择框样式 */
         select {
             margin-right: 10px;
-            padding: 10px;
+            padding: 12px 16px;
             font-size: 16px;
-            border: 1px solid #424242;
-            border-radius: 5px;
-            background-color: #333;
-            color: #fff;
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 8px;
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            font-family: 'HappyZcool', 'Roboto', sans-serif;
+            transition: all 0.2s ease;
         }
+
         select:focus {
-            border-color: #00796b;
+            border-color: var(--md-sys-color-primary);
             outline: none;
+            box-shadow: 0 0 0 2px rgba(103, 80, 164, 0.2);
         }
+
+        /* Material You 3按钮样式 - 更符合设计语言 */
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
-            color: #fff;
-            background-color: #00796b;
+            color: var(--md-sys-color-on-primary);
+            background-color: var(--md-sys-color-primary);
             border: none;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
+            font-family: 'HappyZcool', 'Roboto', sans-serif;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
         }
+
         button:hover {
-            background-color: #005a4d;
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* 按钮涟漪效果 */
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        button:active::after {
+            width: 100px;
+            height: 100px;
+        }
+
+        /* 标题样式 */
         h1 {
-            color: #fff;
+            color: var(--md-sys-color-on-background);
+            margin-bottom: 8px;
+            font-weight: 500;
         }
+
+        h2 {
+            color: var(--md-sys-color-on-surface);
+            margin: 0 0 16px 0;
+            font-weight: 500;
+            font-size: 22px;
+        }
+
+        /* 视频列表样式 */
         ul {
             list-style-type: none;
             padding: 0;
+            width: 100%;
+            max-width: 640px;
         }
+
         li {
-            padding: 10px;
-            background-color: #333;
-            border: 1px solid #424242;
-            border-radius: 5px;
-            margin-bottom: 5px;
+            padding: 16px;
+            background-color: var(--md-sys-color-surface);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 8px;
+            margin-bottom: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            font-size: 14px;
         }
+
         li:hover {
-            background-color: #444;
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
+
+        /* 页脚样式 */
         footer {
             margin-top: auto;
-            padding: 10px 20px;
-            background-color: #111;
-            color: #fff;
+            padding: 16px 20px;
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-on-surface-variant);
             text-align: center;
             width: 100%;
+            border-radius: 12px 12px 0 0;
         }
+
         footer a {
-            color: #00796b;
+            color: var(--md-sys-color-primary);
             text-decoration: none;
+            font-weight: 500;
         }
+
         footer a:hover {
             text-decoration: underline;
+        }
+
+        /* 主题切换按钮样式 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+
+        /* 设置按钮样式 */
+        .settings-toggle {
+            position: fixed;
+            top: 20px;
+            right: 80px;
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .settings-toggle:hover {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            transform: rotate(30deg);
+        }
+
+        /* 设置面板样式 */
+        .settings-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 500px;
+            background-color: var(--md-sys-color-surface);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .settings-panel.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .settings-close {
+            background: none;
+            border: none;
+            color: var(--md-sys-color-on-surface);
+            cursor: pointer;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .settings-close:hover {
+            background-color: var(--md-sys-color-surface-variant);
+        }
+
+        .settings-section {
+            margin-bottom: 24px;
+        }
+
+        .settings-section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--md-sys-color-on-surface-variant);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .settings-section-title .material-icons {
+            font-size: 18px;
+        }
+
+        /* 主题色选择器样式 */
+        .theme-colors {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .theme-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-color:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-color.active {
+            border-color: var(--md-sys-color-outline);
+        }
+
+        /* 开关样式 */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--md-sys-color-surface-variant);
+        }
+
+        .switch-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--md-sys-color-outline);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--md-sys-color-primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* 滑块样式 */
+        .slider-container {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--md-sys-color-surface-variant);
+        }
+
+        .slider-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .range-slider {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--md-sys-color-surface-variant);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--md-sys-color-primary);
+            cursor: pointer;
+        }
+
+        /* 外链按钮样式 */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 640px;
+        }
+
+        .social-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .social-button:active::after {
+            width: 100px;
+            height: 100px;
+        }
+
+        .social-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-button i {
+            font-size: 24px;
+        }
+
+        /* B站按钮样式 */
+        .bilibili-button {
+            background-color: #FB7299;
+        }
+
+        /* GitHub按钮样式 */
+        .github-button {
+            background-color: #333;
+        }
+
+        /* 邮箱按钮样式 */
+        .email-button {
+            background-color: #EA4335;
+        }
+
+        /* 微博按钮样式 */
+        .weibo-button {
+            background-color: #E6162D;
+        }
+
+        /* 深色模式样式 */
+        body.dark-mode {
+            --md-sys-color-primary: var(--md-sys-color-primary-dark);
+            --md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);
+            --md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);
+            --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-dark);
+            --md-sys-color-secondary: var(--md-sys-color-secondary-dark);
+            --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-dark);
+            --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-dark);
+            --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-dark);
+            --md-sys-color-surface: var(--md-sys-color-surface-dark);
+            --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
+            --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-dark);
+            --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-dark);
+            --md-sys-color-background: var(--md-sys-color-background-dark);
+            --md-sys-color-on-background: var(--md-sys-color-on-background-dark);
+            --md-sys-color-outline: var(--md-sys-color-outline-dark);
+            --md-sys-color-shadow: var(--md-sys-color-shadow-dark);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .card {
+                padding: 16px;
+            }
+            
+            select, button {
+                width: 100%;
+                margin-bottom: 12px;
+            }
+            
+            select {
+                margin-right: 0;
+            }
+            
+            .theme-toggle, .settings-toggle {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .settings-toggle {
+                right: 70px;
+            }
+            
+            .settings-panel {
+                width: 95%;
+                padding: 16px;
+            }
+            
+            .social-links {
+                gap: 12px;
+            }
+            
+            .social-button {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .social-button i {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>美酒传奇</h1>
-    <div>
-        <select id="videoSelect">
-            <option value="video/美酒传奇01酒神苏醒.mp4">1. 酒神苏醒</option>
-            <option value="video/美酒传奇02葡萄酒与王室.mp4">2. 葡萄酒与王室</option>
-            <option value="video/美酒传奇03波尔多玫瑰.mp4">3. 波尔多玫瑰</option>
-            <option value="video/美酒传奇04白胡子与酒.mp4">4. 白胡子与酒</option>
-            <option value="video/美酒传奇05美酒美食.mp4">5. 美酒美食</option>
-            <option value="video/美酒传奇06酒堡绝恋.mp4">6. 酒堡绝恋</option>
-            <option value="video/美酒传奇07葡萄酒贸易战.mp4">7. 葡萄酒贸易战</option>
-            <option value="video/美酒传奇08香槟的诞生.mp4">8. 香槟的诞生</option>
-            <option value="video/美酒传奇09画笔下的盛宴.mp4">9. 画笔下的盛宴</option>
-            <option value="video/美酒传奇10美酒佳酿.mp4">10. 美酒佳酿</option>
-            <option value="video/美酒传奇11玻璃的故事.mp4">11. 玻璃的故事</option>
-            <option value="video/美酒传奇12风土的秘密.mp4">12. 风土的秘密</option>
-            <option value="video/美酒传奇13寂静的交响乐.mp4">13. 静寂的交响乐</option>
-            <option value="video/美酒传奇14醉意酒窖.mp4">14. 醉意酒窖</option>
-            <option value="video/美酒传奇15舌尖上的舞蹈.mp4">15. 舌尖上的舞蹈</option>
-            <option value="video/美酒传奇16当葡萄酒爱上橡木桶.mp4">16. 当葡萄酒爱上橡木桶</option>
-            <option value="video/美酒传奇17酒中诗歌.mp4">17. 酒中诗歌</option>
-            <option value="video/美酒传奇18美酒生活.mp4">18. 美酒生活</option>
-            <option value="video/美酒传奇19五大名庄.mp4">19. 五大名庄</option>
-            <option value="video/美酒传奇20王朝与葡萄酒.mp4">20. 王朝与葡萄酒</option>
-        </select>
-        <button id="playButton">播放</button>
+    <!-- 高斯模糊背景 -->
+    <div class="blur-background" id="blurBackground"></div>
+
+    <!-- 主题切换按钮 -->
+    <div class="theme-toggle" id="themeToggle">
+        <span class="material-icons">dark_mode</span>
     </div>
+
+    <!-- 设置按钮 -->
+    <div class="settings-toggle" id="settingsToggle">
+        <span class="material-icons">settings</span>
+    </div>
+
+    <!-- 设置面板 -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2>设置</h2>
+            <button class="settings-close" id="settingsClose">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        
+        <!-- 外观设置 -->
+        <div class="settings-section">
+            <div class="settings-section-title">
+                <span class="material-icons">palette</span>
+                外观设置
+            </div>
+            
+            <div class="theme-colors">
+                <div class="theme-color active" data-theme="purple" style="background-color: #6750A4;"></div>
+                <div class="theme-color" data-theme="blue" style="background-color: #1E6FAF;"></div>
+                <div class="theme-color" data-theme="green" style="background-color: #2E7D32;"></div>
+                <div class="theme-color" data-theme="orange" style="background-color: #E65100;"></div>
+                <div class="theme-color" data-theme="pink" style="background-color: #9C2A6D;"></div>
+            </div>
+            
+            <div class="switch-container">
+                <div class="switch-label">
+                    <span class="material-icons">dark_mode</span>
+                    <span>深色模式</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="switch-container">
+                <div class="switch-label">
+                    <span class="material-icons">computer</span>
+                    <span>跟随系统</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="systemThemeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <div class="switch-label">
+                        <span class="material-icons">blur_on</span>
+                        <span>模糊强度</span>
+                    </div>
+                    <span id="blurValue">10px</span>
+                </div>
+                <input type="range" min="0" max="20" value="10" class="range-slider" id="blurSlider">
+            </div>
+        </div>
+        
+        <!-- 播放设置 -->
+        <div class="settings-section">
+            <div class="settings-section-title">
+                <span class="material-icons">play_circle</span>
+                播放设置
+            </div>
+            
+            <div class="switch-container">
+                <div class="switch-label">
+                    <span class="material-icons">autorenew</span>
+                    <span>自动播放下一集</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="autoPlayToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="switch-container">
+                <div class="switch-label">
+                    <span class="material-icons">high_quality</span>
+                    <span>高清画质</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="highQualityToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- 高级设置 -->
+        <div class="settings-section">
+            <div class="settings-section-title">
+                <span class="material-icons">tune</span>
+                高级设置
+            </div>
+            
+            <div class="switch-container">
+                <div class="switch-label">
+                    <span class="material-icons">animation</span>
+                    <span>光标效果</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="cursorEffectToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <div class="switch-label">
+                        <span class="material-icons">speed</span>
+                        <span>动画速度</span>
+                    </div>
+                    <span id="animationSpeedValue">正常</span>
+                </div>
+                <input type="range" min="0" max="2" value="1" class="range-slider" id="animationSpeedSlider">
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="card">
+        <h1>美酒传奇</h1>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center;">
+            <select id="videoSelect">
+                <option value="video/美酒传奇01酒神苏醒.mp4">1. 酒神苏醒</option>
+                <option value="video/美酒传奇02葡萄酒与王室.mp4">2. 葡萄酒与王室</option>
+                <option value="video/美酒传奇03波尔多玫瑰.mp4">3. 波尔多玫瑰</option>
+                <option value="video/美酒传奇04白胡子与酒.mp4">4. 白胡子与酒</option>
+                <option value="video/美酒传奇05美酒美食.mp4">5. 美酒美食</option>
+                <option value="video/美酒传奇06酒堡绝恋.mp4">6. 酒堡绝恋</option>
+                <option value="video/美酒传奇07葡萄酒贸易战.mp4">7. 葡萄酒贸易战</option>
+                <option value="video/美酒传奇08香槟的诞生.mp4">8. 香槟的诞生</option>
+                <option value="video/美酒传奇09画笔下的盛宴.mp4">9. 画笔下的盛宴</option>
+                <option value="video/美酒传奇10美酒佳酿.mp4">10. 美酒佳酿</option>
+                <option value="video/美酒传奇11玻璃的故事.mp4">11. 玻璃的故事</option>
+                <option value="video/美酒传奇12风土的秘密.mp4">12. 风土的秘密</option>
+                <option value="video/美酒传奇13寂静的交响乐.mp4">13. 静寂的交响乐</option>
+                <option value="video/美酒传奇14醉意酒窖.mp4">14. 醉意酒窖</option>
+                <option value="video/美酒传奇15舌尖上的舞蹈.mp4">15. 舌尖上的舞蹈</option>
+                <option value="video/美酒传奇16当葡萄酒爱上橡木桶.mp4">16. 当葡萄酒爱上橡木桶</option>
+                <option value="video/美酒传奇17酒中诗歌.mp4">17. 酒中诗歌</option>
+                <option value="video/美酒传奇18美酒生活.mp4">18. 美酒生活</option>
+                <option value="video/美酒传奇19五大名庄.mp4">19. 五大名庄</option>
+                <option value="video/美酒传奇20王朝与葡萄酒.mp4">20. 王朝与葡萄酒</option>
+            </select>
+            <button id="playButton">播放</button>
+        </div>
+    </div>
+
+    <!-- 视频播放器 -->
     <video id="videoPlayer" controls autoplay>
         <source id="videoSource" src="video/美酒传奇01酒神苏醒.mp4" type="video/mp4">
         您的浏览器不支持video标签。
     </video>
-    <!-- 添加iframe标签 -->
-    <iframe src="http://www.staggeringbeauty.com/" style="border: 1px inset #ddd; width: 100%; max-width: 640px;" width="640" height="480"></iframe>
+
+    <!-- 外链按钮区域 -->
+    <div class="social-links">
+        <a href="https://space.bilibili.com/403681442" class="social-button bilibili-button" target="_blank" title="B站主页">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768L17.08 5.996h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.18L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.178.199-.257l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.659-.51-1.199-1.157-1.246l-.093-.004zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z"/>
+            </svg>
+        </a>
+        <a href="https://github.com/slbcz/onlv.github.io" class="social-button github-button" target="_blank" title="GitHub">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+        </a>
+        <a href="mailto:3183368884@qq.com" class="social-button email-button" title="发送邮件">
+            <span class="material-icons">email</span>
+        </a>
+        <a href="https://weibo.com" class="social-button weibo-button" target="_blank" title="微博">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10.152 12.467c-.047-.052-.473-.528-1.42-.528-.948 0-1.42.476-1.42.528a.38.38 0 0 0 .121.283.41.41 0 0 0 .299.122c.157 0 .787-.238.787-.238s.63.238.787.238a.41.41 0 0 0 .299-.122.38.38 0 0 0 .121-.283zm-3.92-1.67c-.653 0-1.218.387-1.218.387s.33-.044.737-.044c.406 0 .735.044.735.044s-.565-.387-1.218-.387zm9.018 0c-.653 0-1.218.387-1.218.387s.33-.044.737-.044c.406 0 .735.044.735.044s-.565-.387-1.218-.387zm-9.082.263c.179 0 .322.143.322.322 0 .178-.143.322-.322.322a.321.321 0 0 1-.322-.322c0-.179.143-.322.322-.322zm9.018 0c.179 0 .322.143.322.322 0 .178-.143.322-.322.322a.321.321 0 0 1-.322-.322c0-.179.143-.322.322-.322zm4.982-4.416c0 4.991-4.325 9.038-9.657 9.038-5.331 0-9.657-4.047-9.657-9.038 0-4.992 4.326-9.039 9.657-9.039 5.332 0 9.657 4.047 9.657 9.039zm-2.808 0c0-3.44-2.829-6.229-6.319-6.229-3.489 0-6.318 2.789-6.318 6.229 0 3.441 2.829 6.23 6.318 6.23 3.49 0 6.319-2.789 6.319-6.23zm-3.858 6.037c1.33 0 1.765-1.288 1.765-1.288 0 1.289-.5 1.5-1.765 1.5-1.264 0-1.765-.211-1.765-1.5 0 0 .435 1.288 1.765 1.288zm.117-2.044c.799 0 1.447-.647 1.447-1.446s-.648-1.446-1.447-1.446c-.8 0-1.447.647-1.447 1.446s.647 1.446 1.447 1.446zm-5.588-2.893c-.799 0-1.446.647-1.446 1.446s.647 1.446 1.446 1.446c.8 0 1.447-.647 1.447-1.446s-.647-1.446-1.447-1.446z"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- 视频列表（隐藏，用于JavaScript操作） -->
     <ul id="videoList" style="display:none;">
         <li>video/美酒传奇01酒神苏醒.mp4</li>
         <li>video/美酒传奇02葡萄酒与王室.mp4</li>
@@ -141,14 +866,33 @@
         <li>video/美酒传奇20王朝与葡萄酒.mp4</li>
     </ul>
 
+    <footer>
+        <p> 使用此网站即代表你同意本站的<a href="README.md">《隐私政策与免责条款》</a>, 如果您觉得本站侵犯了您的权益, 请联系3183368884@qq.com</p>
+    </footer>
+
     <script>
+        // 页面加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
-            var videoPlayer = document.getElementById('videoPlayer');
-            var videoSource = document.getElementById('videoSource');
-            var videoList = document.getElementById('videoList').getElementsByTagName('li');
-            var videoSelect = document.getElementById('videoSelect');
-            var playButton = document.getElementById('playButton');
-            var currentVideoIndex = 0;
+            // 获取DOM元素
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoSource = document.getElementById('videoSource');
+            const videoList = document.getElementById('videoList').getElementsByTagName('li');
+            const videoSelect = document.getElementById('videoSelect');
+            const playButton = document.getElementById('playButton');
+            const themeToggle = document.getElementById('themeToggle');
+            const settingsToggle = document.getElementById('settingsToggle');
+            const settingsPanel = document.getElementById('settingsPanel');
+            const settingsClose = document.getElementById('settingsClose');
+            const blurBackground = document.getElementById('blurBackground');
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const systemThemeToggle = document.getElementById('systemThemeToggle');
+            const blurSlider = document.getElementById('blurSlider');
+            const blurValue = document.getElementById('blurValue');
+            
+            let currentVideoIndex = 0;
+            let isDarkMode = false;
+            let currentTheme = 'purple';
+            let followSystemTheme = false;
 
             // 初始化视频来源和选集框
             videoSource.src = videoList[currentVideoIndex].textContent;
@@ -183,18 +927,235 @@
                 updateVideoSelect();
             });
 
-            // 创建彩虹光标效果
-            new cursoreffects.rainbowCursor({
-                length: 3,
-                colors: ["red", "blue"],
-                size: 4,
+            // 主题切换功能
+            themeToggle.addEventListener('click', function(e) {
+                // 获取点击位置
+                const rect = themeToggle.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // 设置涟漪效果起点
+                document.documentElement.style.setProperty('--ripple-x', x + 'px');
+                document.documentElement.style.setProperty('--ripple-y', y + 'px');
+                
+                // 切换主题
+                toggleTheme();
+                
+                // 触发涟漪动画
+                document.body.classList.add('ripple-active');
+                document.documentElement.style.setProperty('--ripple-active', '0.05');
+                
+                // 动画结束后移除类
+                setTimeout(() => {
+                    document.body.classList.remove('ripple-active');
+                    document.documentElement.style.setProperty('--ripple-active', '0');
+                }, 600);
             });
+
+            // 切换主题函数
+            function toggleTheme() {
+                isDarkMode = !isDarkMode;
+                if (isDarkMode) {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.querySelector('span').textContent = 'light_mode';
+                    darkModeToggle.checked = true;
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    themeToggle.querySelector('span').textContent = 'dark_mode';
+                    darkModeToggle.checked = false;
+                }
+                
+                // 保存用户偏好
+                localStorage.setItem('darkMode', isDarkMode);
+                localStorage.setItem('followSystemTheme', false);
+                followSystemTheme = false;
+                systemThemeToggle.checked = false;
+            }
+
+            // 设置面板功能
+            settingsToggle.addEventListener('click', function() {
+                settingsPanel.classList.add('active');
+                blurBackground.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            settingsClose.addEventListener('click', function() {
+                settingsPanel.classList.remove('active');
+                blurBackground.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            blurBackground.addEventListener('click', function() {
+                settingsPanel.classList.remove('active');
+                blurBackground.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            // 主题色选择
+            document.querySelectorAll('.theme-color').forEach(color => {
+                color.addEventListener('click', function() {
+                    // 移除所有激活状态
+                    document.querySelectorAll('.theme-color').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // 添加激活状态
+                    this.classList.add('active');
+                    
+                    // 应用主题色
+                    applyTheme(this.dataset.theme);
+                });
+            });
+
+            // 应用主题色函数
+            function applyTheme(theme) {
+                currentTheme = theme;
+                
+                // 根据主题设置颜色变量
+                switch(theme) {
+                    case 'purple':
+                        document.documentElement.style.setProperty('--md-sys-color-primary', '#6750A4');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container', '#EADDFF');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-dark', '#D0BCFF');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container-dark', '#4F378B');
+                        break;
+                    case 'blue':
+                        document.documentElement.style.setProperty('--md-sys-color-primary', '#1E6FAF');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container', '#D3E3FD');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-dark', '#A1C9FF');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container-dark', '#005493');
+                        break;
+                    case 'green':
+                        document.documentElement.style.setProperty('--md-sys-color-primary', '#2E7D32');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container', '#C8E6C9');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-dark', '#A5D6A7');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container-dark', '#1B5E20');
+                        break;
+                    case 'orange':
+                        document.documentElement.style.setProperty('--md-sys-color-primary', '#E65100');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container', '#FFDCC3');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-dark', '#FFB380');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container-dark', '#8D2E00');
+                        break;
+                    case 'pink':
+                        document.documentElement.style.setProperty('--md-sys-color-primary', '#9C2A6D');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container', '#FFD8E8');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-dark', '#FFAFD2');
+                        document.documentElement.style.setProperty('--md-sys-color-primary-container-dark', '#7A1C55');
+                        break;
+                }
+                
+                // 保存用户偏好
+                localStorage.setItem('theme', theme);
+            }
+
+            // 深色模式切换
+            darkModeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    document.body.classList.add('dark-mode');
+                    isDarkMode = true;
+                    themeToggle.querySelector('span').textContent = 'light_mode';
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    isDarkMode = false;
+                    themeToggle.querySelector('span').textContent = 'dark_mode';
+                }
+                
+                // 保存用户偏好
+                localStorage.setItem('darkMode', isDarkMode);
+            });
+
+            // 系统主题跟随功能
+            systemThemeToggle.addEventListener('change', function() {
+                followSystemTheme = this.checked;
+                localStorage.setItem('followSystemTheme', followSystemTheme);
+                
+                if (followSystemTheme) {
+                    // 监听系统主题变化
+                    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                    handleSystemThemeChange(mediaQuery);
+                    
+                    // 添加监听器
+                    mediaQuery.addEventListener('change', handleSystemThemeChange);
+                }
+            });
+
+            // 处理系统主题变化
+            function handleSystemThemeChange(e) {
+                if (followSystemTheme) {
+                    if (e.matches) {
+                        // 系统启用深色模式
+                        document.body.classList.add('dark-mode');
+                        isDarkMode = true;
+                        themeToggle.querySelector('span').textContent = 'light_mode';
+                        darkModeToggle.checked = true;
+                    } else {
+                        // 系统启用浅色模式
+                        document.body.classList.remove('dark-mode');
+                        isDarkMode = false;
+                        themeToggle.querySelector('span').textContent = 'dark_mode';
+                        darkModeToggle.checked = false;
+                    }
+                    
+                    // 保存用户偏好
+                    localStorage.setItem('darkMode', isDarkMode);
+                }
+            }
+
+            // 模糊强度调节
+            blurSlider.addEventListener('input', function() {
+                const value = this.value + 'px';
+                document.documentElement.style.setProperty('--blur-intensity', value);
+                blurValue.textContent = value;
+                localStorage.setItem('blurIntensity', value);
+            });
+
+            // 初始化用户偏好
+            function initUserPreferences() {
+                // 加载主题色偏好
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme) {
+                    applyTheme(savedTheme);
+                    document.querySelector(`.theme-color[data-theme="${savedTheme}"]`).classList.add('active');
+                } else {
+                    document.querySelector('.theme-color[data-theme="purple"]').classList.add('active');
+                }
+                
+                // 加载深色模式偏好
+                const savedDarkMode = localStorage.getItem('darkMode');
+                if (savedDarkMode === 'true') {
+                    document.body.classList.add('dark-mode');
+                    isDarkMode = true;
+                    themeToggle.querySelector('span').textContent = 'light_mode';
+                    darkModeToggle.checked = true;
+                }
+                
+                // 加载系统主题跟随偏好
+                const savedFollowSystem = localStorage.getItem('followSystemTheme');
+                if (savedFollowSystem === 'true') {
+                    followSystemTheme = true;
+                    systemThemeToggle.checked = true;
+                    
+                    // 监听系统主题变化
+                    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                    handleSystemThemeChange(mediaQuery);
+                    mediaQuery.addEventListener('change', handleSystemThemeChange);
+                }
+                
+                // 加载模糊强度偏好
+                const savedBlurIntensity = localStorage.getItem('blurIntensity');
+                if (savedBlurIntensity) {
+                    document.documentElement.style.setProperty('--blur-intensity', savedBlurIntensity);
+                    blurSlider.value = parseInt(savedBlurIntensity);
+                    blurValue.textContent = savedBlurIntensity;
+                }
+            }
+
+            // 初始化用户偏好
+            initUserPreferences();
+
+            // 注意：彩虹光标效果已移除
         });
     </script>
-
-<footer>
-    <p> 使用此网站即代表你同意本站的<a href="README.md">《隐私政策与免责条款》</a>, 如果您觉得本站侵犯了您的权益, 请联系3183368884@qq.com</p>
-</footer>
-
 </body>
 </html>
